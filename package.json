@@ -1,6 +1,6 @@
 {
   "name": "whiteboard-media",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Media mixin",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "media",
     "whiteboard"
   ],
-  "devDependencies": {
-    "whiteboard-importer": "^0.1.0"
+  "dependencies": {
+    "whiteboard-importer": "^0.1.1"
   }
 }

@@ -1,1 +1,1 @@
-module.exports = require('whiteboard-importer');
+module.exports = require('whiteboard-importer')(__dirname);
