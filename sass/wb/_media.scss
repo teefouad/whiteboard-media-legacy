@@ -1,0 +1,47 @@
+// variables
+$wb-breakpoints: () !default;
+
+// functions
+@function wb-add-breakpoint($name, $options) {
+  $options: map-merge((
+      'value'              : 768px,
+      'suffix'             : '',
+      'suffix-alias'       : ''
+  ), $options);
+  
+  @return map-merge($wb-breakpoints, (#{$name}: $options));
+}
+
+// default breakpoints
+$wb-breakpoints: wb-add-breakpoint('xsmall', (
+  'value': 480px
+));
+
+$wb-breakpoints: wb-add-breakpoint('small', (
+  'value': 768px
+));
+
+$wb-breakpoints: wb-add-breakpoint('medium', (
+  'value': 992px
+));
+
+$wb-breakpoints: wb-add-breakpoint('large', (
+  'value': 1200px
+));
+
+// media mixin
+@mixin wb-media($media) {
+  $breakpoint-name: str-slice($media, 2);
+  
+  @if map-has-key($wb-breakpoints, $breakpoint-name) {
+    $breakpoint: map-get($wb-breakpoints, $breakpoint-name);
+    
+    @if $media == '<#{$breakpoint-name}' {
+      @media screen and (max-width: map-get($breakpoint, 'value') - 1) { @content; }
+    }
+    
+    @if $media == '>#{$breakpoint-name}' {
+      @media screen and (min-width: map-get($breakpoint, 'value')) { @content; }
+    }
+  }
+}
