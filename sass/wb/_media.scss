@@ -31,17 +31,45 @@ $wb-breakpoints: wb-add-breakpoint('large', (
 
 // media mixin
 @mixin wb-media($media) {
-  $breakpoint-name: str-slice($media, 2);
+  $min-value: 0;
+  $keys-list: map-keys($wb-breakpoints);
   
-  @if map-has-key($wb-breakpoints, $breakpoint-name) {
-    $breakpoint: map-get($wb-breakpoints, $breakpoint-name);
-    
-    @if $media == '<#{$breakpoint-name}' {
-      @media screen and (max-width: map-get($breakpoint, 'value') - 1) { @content; }
+  $first-breakpoint : nth($keys-list, 1);
+  $last-breakpoint  : nth($keys-list, length($keys-list));
+  
+  @each $breakpoint-name, $breakpoint in $wb-breakpoints {
+    @if $breakpoint-name == $first-breakpoint {
+      @if $media == $breakpoint-name or $media == '<#{$breakpoint-name}' {
+        @media screen and (max-width: map-get($breakpoint, 'value') - 1) { @content; }
+      }
+      
+      @if $media == '>#{$breakpoint-name}' {
+        @media screen and (min-width: map-get($breakpoint, 'value')) { @content; }
+      }
+    }
+    @else if $breakpoint-name == $last-breakpoint {
+      @if $media == $breakpoint-name or $media == '>#{$breakpoint-name}' {
+        @media screen and (min-width: $min-value) { @content; }
+      }
+      
+      @if $media == '<#{$breakpoint-name}' {
+        @media screen and (max-width: $min-value - 1) { @content; }
+      }
+    }
+    @else {
+      @if $media == $breakpoint-name {
+        @media screen and (min-width: $min-value) and (max-width: map-get($breakpoint, 'value') - 1) { @content; }
+      }
+      
+      @if $media == '<#{$breakpoint-name}' {
+        @media screen and (max-width: map-get($breakpoint, 'value') - 1) { @content; }
+      }
+      
+      @if $media == '>#{$breakpoint-name}' {
+        @media screen and (min-width: map-get($breakpoint, 'value')) { @content; }
+      }
     }
     
-    @if $media == '>#{$breakpoint-name}' {
-      @media screen and (min-width: map-get($breakpoint, 'value')) { @content; }
-    }
+    $min-value: map-get($breakpoint, 'value');
   }
 }
